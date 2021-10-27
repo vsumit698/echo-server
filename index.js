@@ -8,11 +8,12 @@ server.listen(port,function(){
 });
 
 server.on('connection',function(socket){
+   
    // each socket is dedicated to specific client
    // socket.write('client connected to server [SERVER] ');
    console.log(socket.address(),'at server side',socket.remoteAddress,socket.remotePort);
    server.getConnections((err,count)=>{
-      console.log('all Connectios',count);
+      console.log('all Connections',count);
    });
    socket.on('data',function(chunk){
       console.log('received data',chunk.toString()+'[SERVER]');
@@ -24,6 +25,10 @@ server.on('connection',function(socket){
    });
 
    socket.on('error',function(error){
+      if(error.code === 'ECONNRESET'){
+         console.log('client disconnected');
+         return;
+      }
       console.log('error at server side',error);
    });
 
